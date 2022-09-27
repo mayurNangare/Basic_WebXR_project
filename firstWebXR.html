@@ -5,15 +5,15 @@
     <title> First Object - XR Scene </title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <link type="text/css" rel="stylesheet" href="https://mayurnangare.github.io/Basic_WebXR_project/Styles.css">
+    <link type="text/css" rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r126/three.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <script type="module">
-         import { ARButton } from 'https://unpkg.com/three@0.126.0/examples/jsm/webxr/ARButton.js';
+        import { ARButton } from 'https://unpkg.com/three@0.126.0/examples/jsm/webxr/ARButton.js';
         let camera, scene , renderer;
-        let mesh;
+        let mesh,mesh2;
 
         init();
         animate();
@@ -29,7 +29,7 @@
             renderer = new THREE.WebGLRenderer({antialias : true, alpha : true});
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(window.innerWidth,window.innerHeight);
-             renderer.xr.enabled = true;
+            renderer.xr.enabled = true;
             container.appendChild(renderer.domElement);
 
             var light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
@@ -46,12 +46,25 @@
             });
 
             mesh = new THREE.Mesh(geometry,material);
-            mesh.position.set(0,0,-0.5);
+            mesh.position.set(0.2,0,-0.5);
             scene.add(mesh);
-            
+
+            // add a torus Mesh;
+            const geometry2 = new THREE.TorusGeometry(0.15,0.05,50);
+            const material2 = new THREE.MeshBasicMaterial({
+                color : new THREE.Color("rgb(253,253,150)")
+            });
+            mesh2 = new THREE.Mesh(geometry2,material2);
+            mesh2.position.set(-0.2,0,-1);
+            scene.add(mesh2);
+
+            //----------------------------------------------------------------------
+
             document.body.appendChild(ARButton.createButton(renderer));
             window.addEventListener('resize',onWindowResize,false);
         }
+
+
 
         function onWindowResize(){
 
@@ -65,15 +78,15 @@
             renderer.setAnimationLoop(render);
         }
 
-        function render(){
+        function render(){ // function is called 60/sec;
+            rotateObjects();
             renderer.render(scene,camera);
         }
 
-
-
-
-
-
+        function rotateObjects(){
+            mesh.rotation.y = mesh.rotation.y - 0.01;
+            mesh2.rotation.x = mesh2.rotation.x  - 0.01;
+        }
 
     </script>
 
